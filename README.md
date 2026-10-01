@@ -1,10 +1,10 @@
 # Research Opportunity Portal (Full-Stack API)
 
-**Student Name:** Musadiq Zeb 
-**Student ID:** P24-0016 
-**Class:** AI5A 
-**GitHub Repository:**  https://github.com/MusadiqZeb/P24_0016_Musadiq_AI5A
-**Demo Video:** Included in the `zip` file.
+**Student Name:** Musadiq Zeb  
+**Student ID:** P24-0016  
+**Class:** AI5A  
+**GitHub Repository:**  https://github.com/MusadiqZeb/P24_0016_Musadiq_AI5A  
+**Demo Video:** Included in the `zip` file.  
 
 ## Project Overview
 This project is a full-stack web application for managing university research opportunities. It features a Python/Flask REST API backend, a MySQL database, and an HTML/Bootstrap frontend.
