@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+    <h1 class="mb-4">Research Opportunity Portal</h1>
+
+    <!-- Form to Create Opportunity -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Post a New Opportunity</h5>
+            <form id="createForm">
+                <div class="row g-2">
+                    <div class="col-md-6"><input type="text" id="title" class="form-control" placeholder="Project Title" required></div>
+                    <div class="col-md-6"><input type="text" id="research_area" class="form-control" placeholder="Research Area" required></div>
+                    <div class="col-md-6"><input type="text" id="faculty_name" class="form-control" placeholder="Faculty Name" required></div>
+                    <div class="col-md-6"><input type="text" id="department" class="form-control" placeholder="Department" required></div>
+                    <div class="col-md-6"><input type="text" id="required_skills" class="form-control" placeholder="Required Skills" required></div>
+                    <div class="col-md-3"><input type="number" id="available_positions" class="form-control" placeholder="Positions" required></div>
+                    <div class="col-md-3"><input type="date" id="application_deadline" class="form-control" required></div>
+                    <div class="col-12"><textarea id="description" class="form-control" placeholder="Project Description" required></textarea></div>
+                    <div class="col-12"><button type="submit" class="btn btn-primary">Submit Opportunity</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table to Display Opportunities -->
+    <h3>Available Opportunities</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Faculty</th>
+                <th>Area</th>
+                <th>Deadline</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="opportunitiesTable">
+            <!-- JavaScript will populate this -->
+        </tbody>
+    </table>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000/api/opportunities';
+
+        // 1. Fetch and display opportunities
+        async function fetchOpportunities() {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            const tableBody = document.getElementById('opportunitiesTable');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            data.forEach(opp => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${opp.title}</td>
+                        <td>${opp.faculty_name}</td>
+                        <td>${opp.research_area}</td>
+                        <td>${opp.application_deadline}</td>
+                        <td><span class="badge bg-${opp.status === 'Open' ? 'success' : 'secondary'}">${opp.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // 2. Handle form submission to create a new opportunity
+        document.getElementById('createForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent page reload
+            
+            const newOpportunity = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                research_area: document.getElementById('research_area').value,
+                faculty_name: document.getElementById('faculty_name').value,
+                department: document.getElementById('department').value,
+                required_skills: document.getElementById('required_skills').value,
+                available_positions: document.getElementById('available_positions').value,
+                application_deadline: document.getElementById('application_deadline').value
+            };
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newOpportunity)
+            });
+
+            if (response.ok) {
+                document.getElementById('createForm').reset(); // Clear the form
+                fetchOpportunities(); // Refresh the table
+            } else {
+                alert("Error creating opportunity!");
+            }
+        });
+
+        // Load data when the page opens
+        window.onload = fetchOpportunities;
+    </script>
+</body>
+</html>
